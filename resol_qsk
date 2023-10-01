@@ -1,0 +1,12 @@
+function [a,b] = resol_qsk(x,lambda)
+
+
+J=Jacobieng(x);
+a = -J\g(x);
+
+zeta = -(J')\(hessienneL(x,lambda)*a + gradf(x));
+b=zeta-lambda;
+
+
+
+end
