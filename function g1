@@ -1,0 +1,7 @@
+function y = g1 (x)
+    if length(x)== 5
+        y = sum(x.^2)-10;   
+    else 
+        y=0;
+    end
+end
