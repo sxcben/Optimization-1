@@ -1,0 +1,93 @@
+close all;
+clear all;
+
+%différents x0
+%x0=[-1.71;1.59;1.82;-0.763;-0.763];
+x0=[-1.9;1.82;2.02;-0.9;-0.9];
+%x0=[1;0;3;0;0];
+
+l0=[1;1;1];
+
+%vecteur norme de xk+1-xk
+X=zeros(50,1);
+
+%Vecteur norme du KKT
+N=50;
+KKT1 = zeros(N,1);  %condition gradf +Jg*lambda
+KKT2 = zeros(N,1);  %condition sur g
+
+K=(1:50);
+
+df=gradf(x0);
+
+% SQP algorithm
+%init
+eps=0.001;
+k=1;
+J=Jacobieng(x0,l0);
+S=(J')*l0;
+g=[g1(x0),g2(x0),g3(x0)];
+KKT2(1)=norm(g);
+KKT1(1)=norm(df+(Jacobieng(x0,l0)')*l0);
+xk=x0; lk=l0;  
+
+
+
+while  norm(df+S)>eps || norm(g)>eps  %%tant que les conditions KKT ne sont pas vérifiées 
+    %résolution de QSk
+    
+    ksi=[xk;lk];
+    g=[g1(xk);g2(xk);g3(xk)];
+    hessL = hessienneL(xk,lk);
+    
+   [ak,bk]=resol_qsk(xk,lk);
+    X(k)=norm(ak);
+   %Mise è jour des valeurs
+    xk2=xk+ak; lk2=lk+bk;
+    ksi2=[xk2;lk2];
+    df=gradf(xk2);J=Jacobieng(xk2,lk2);
+    S=(J')*lk2;
+    
+    %condition d'arrêt
+    if k>=N
+        disp("n'avance plus")
+        break
+    end
+    xk=xk2 ; lk=lk2;
+    k=k+1;
+    KKT1(k)=norm(df+(Jacobieng(xk,lk)')*lk);
+    KKT2(k)=norm(g);
+    
+end
+
+if  norm(g)<eps
+        disp("solution vérifie les conditions")
+    end
+if  norm(df+(Jacobieng(xk,lk)')*lk)<eps
+        disp("solution minimise f")
+end
+
+disp(xk2)
+
+%figure
+% yyaxis left
+% plot(K,KKT2);
+% 
+% yyaxis right
+% plot(K,X);
+% 
+% yyaxis left
+% title('CAS 3')
+% xlabel('k')
+% ylabel('KKT2')
+% 
+% yyaxis right
+% ylabel('Xk+1-Xk')
+
+%Pour voir plus précisément vers là où cela converge
+% K=K(10:N);
+% KKT1=10^3*KKT1(10:N);
+% plot(K,KKT1)
+% title('CAS 2')
+% xlabel('k')
+% ylabel('KKT1*10^3')
