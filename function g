@@ -1,0 +1,3 @@
+function y = g(x)
+y=[g1(x);g2(x);g3(x)];
+end
