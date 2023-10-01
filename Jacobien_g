@@ -1,0 +1,11 @@
+function y = Jacobieng (x,lambda)
+    y=zeros(3,5);
+    if length(x)== 5
+        y(1,:) = [2*x(1),2*x(2),2*x(3),2*x(4),2*x(5)]';
+        y(2,:) = [0,x(3),x(2),-5*x(5),-5*x(4)]';
+        y(3,:) = [3*x(1).^2,3*x(2).^2,0,0,0]';
+    else 
+        y=0;
+    end
+    
+end
