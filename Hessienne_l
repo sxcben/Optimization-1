@@ -1,0 +1,4 @@
+function hl=hessien_l(x,lambda)
+
+hl= hessien_f(x) + lambda(1)*hessien_g1(x) + lambda(2)*hessien_g2(x) + lambda(3)*hessien_g3(x);
+end
